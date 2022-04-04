@@ -8,6 +8,9 @@ class Tesla {
     this.token = null;
   }
 
+  /*
+   * Handle requests to Powerwall RESTFul endpoints
+   */
   static async #request(endpoint, method, body = {}, headers = {}) {
     const payload = {
       method,
@@ -29,6 +32,9 @@ class Tesla {
     }
   }
 
+  /*
+   * Handle logging into the Powerwalls RESTFul endpoint
+   */
   async login() {
     try {
       const response = await Tesla.#request('login/Basic', 'POST', {
@@ -46,6 +52,9 @@ class Tesla {
     }
   }
 
+  /*
+   * Query an aggregate of Battery, Load, Site and Solar metrics
+   */
   async aggregates() {
     try {
       const response = await Tesla.#request('meters/aggregates', 'GET', {}, { Authorization: `Bearer ${this.token}` });
@@ -55,6 +64,9 @@ class Tesla {
     }
   }
 
+  /*
+   * Query Powerwall metrics
+   */
   async powerwalls() {
     try {
       const response = await Tesla.#request('powerwalls', 'GET', {}, { Authorization: `Bearer ${this.token}` });
@@ -64,6 +76,9 @@ class Tesla {
     }
   }
 
+  /*
+   * Query Powerwall Grid Status
+   */
   async gridStatus() {
     try {
       const response = await Tesla.#request('system_status/grid_status', 'GET', {}, { Authorization: `Bearer ${this.token}` });
@@ -73,6 +88,9 @@ class Tesla {
     }
   }
 
+  /*
+   * Query Powerwall State of Energy
+   */
   async soe() {
     try {
       const response = await Tesla.#request('system_status/soe', 'GET', {}, { Authorization: `Bearer ${this.token}` });
@@ -82,6 +100,9 @@ class Tesla {
     }
   }
 
+  /*
+   * Query Powerwall Site metrics
+   */
   async sitemaster() {
     try {
       const response = await Tesla.#request('sitemaster', 'GET', {}, { Authorization: `Bearer ${this.token}` });
