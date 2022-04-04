@@ -10,12 +10,24 @@ const app = express();
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  return res.status(200).send(`
+<html>
+<head><title>Tesla Powerwall Exporter</title></head>
+<body>
+<h1>Tesla Powerwall Exporter</h1>
+<p><a href="/metrics">Metrics</a></p>
+</body>
+</html>
+`);
+});
+
 app.get('/metrics', async (req, res) => {
   res.set('Content-type', client.register.contentType);
   res.status(200).send(await client.register.metrics());
 });
 
-const PORT = parseInt(process.env.PORT, 10) || 8080;
+const PORT = parseInt(process.env.PORT, 10) || 9961;
 const SCRAPE_INTERVAL = parseInt(process.env.SCRAPE_INTERVAL, 10) || 30000;
 
 ['TESLA_ADDR', 'TESLA_EMAIL', 'TESLA_PASSWORD'].forEach((e) => {
