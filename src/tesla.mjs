@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 class Tesla {
   constructor(email, password) {
@@ -11,21 +11,18 @@ class Tesla {
   /*
    * Handle requests to Powerwall RESTFul endpoints
    */
-  static async #request(endpoint, method, body = {}, headers = {}) {
-    const payload = {
-      method,
-      headers: { 'Content-Type': 'application/json', ...headers },
-    };
-
-    // The GET and HEAD methods cannot contain a body with their requests
-    if (!['GET', 'HEAD'].includes(method)) {
-      payload.body = JSON.stringify(body);
-    }
-
+  static async #request(endpoint, method, body = {}, headers = {}, retries = 3) {
     try {
-      const response = await fetch(`https://${process.env.TESLA_ADDR}/api/${endpoint}`, payload);
-      const data = await response.json();
-
+      const response = await axios({
+        url: `https://${process.env.TESLA_ADDR}/api/${endpoint}`,
+        method,
+        headers: { 'Content-Type': 'application/json', ...headers },
+        data: body,
+        raxConfig: {
+          retry: retries,
+        },
+      });
+      const { data } = await response;
       return data;
     } catch (error) {
       throw new Error(error);

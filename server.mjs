@@ -10,8 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  return res.status(200).send(`
+app.get('/', (req, res) => res.status(200).send(`
 <html>
 <head><title>Tesla Powerwall Exporter</title></head>
 <body>
@@ -19,8 +18,7 @@ app.get('/', (req, res) => {
 <p><a href="/metrics">Metrics</a></p>
 </body>
 </html>
-`);
-});
+`));
 
 app.get('/metrics', async (req, res) => {
   res.set('Content-type', client.register.contentType);
@@ -28,7 +26,7 @@ app.get('/metrics', async (req, res) => {
 });
 
 const PORT = parseInt(process.env.PORT, 10) || 9961;
-const SCRAPE_INTERVAL = parseInt(process.env.SCRAPE_INTERVAL, 10) || 30000;
+const SCRAPE_INTERVAL = parseInt(process.env.SCRAPE_INTERVAL, 10) * 1000 || 30000;
 
 ['TESLA_ADDR', 'TESLA_EMAIL', 'TESLA_PASSWORD'].forEach((e) => {
   if (!(e in process.env)) {
