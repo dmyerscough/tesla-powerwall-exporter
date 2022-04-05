@@ -35,10 +35,20 @@ $ npm run start
 
 ```bash
 docker run \
-  -p 8080:8008 \
+  -p 9961:9961 \
   -e TESLA_ADDR="192.168.0.3" \
   -e TESLA_EMAIL="damian@example.com" \
   -e TESLA_PASSWORD="MySecretPassword" \
   prometheus-tesla:0.0.1
 ```
 
+## Prometheus Configuration
+
+You can configure Prometheus to scrape the Telsa Powerwall Exporter metrics endpoint using the following job snippet.
+
+```yaml
+- job_name: "tesla_powerwall"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["192.168.0.1:9961"]
+```
