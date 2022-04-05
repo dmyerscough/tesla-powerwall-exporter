@@ -3,6 +3,9 @@ Tesla Powerwall Exporter
 
 Prometheus exporter for Tesla Powerwall and Solar.
 
+<img width="1509" alt="Tesla Powerwall Exporter" src="https://user-images.githubusercontent.com/1395617/161689141-b99a8905-b11f-4af6-ac67-7d24b3bb34a4.png">
+
+
 ## Installation and Usage
 
 Building the Tesla Powerwall exporter can be done by running the following commands.
