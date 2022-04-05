@@ -12,12 +12,32 @@ const logger = winston.createLogger({
   ],
 });
 
+const waitFor = (millSeconds) => new Promise((resolve) => {
+  setTimeout(() => {
+    resolve();
+  }, millSeconds);
+});
+
+const retryPromiseWithExpotentialDelay = async (promise, retries) => {
+  try {
+    const res = await promise;
+    return res;
+  } catch (error) {
+    if (retries < 1) {
+      return Promise.reject(error);
+    }
+    logger.info(`retrying promise, sleeping for ${2 ** retries}`);
+    await waitFor((2 ** retries) * 1000);
+    return retryPromiseWithExpotentialDelay(promise, retries - 1);
+  }
+};
+
 /*
  * Query all aggregated metrics
  */
 const updateMetrics = async (tesla) => {
   logger.info('Scraping powerwall');
-  const metrics = await tesla.aggregates();
+  const metrics = await retryPromiseWithExpotentialDelay(tesla.aggregates(), 3);
 
   [Site, Battery, Load, Solar].forEach((category) => {
     // eslint-disable-next-line array-callback-return,consistent-return
@@ -26,7 +46,7 @@ const updateMetrics = async (tesla) => {
     });
   });
 
-  const soe = await tesla.soe();
+  const soe = await retryPromiseWithExpotentialDelay(tesla.soe(), 3);
   powerwallStateOfCharge.set(soe.percentage);
 
   logger.info('Finished scraping powerwall');

@@ -179,6 +179,11 @@ const Solar = {
     help: 'Frequency',
   }),
 
+  energy_exported: new client.Gauge({
+    name: 'tesla_solar_energy_exported',
+    help: 'Energy Exported',
+  }),
+
   energy_imported: new client.Gauge({
     name: 'tesla_solar_energy_imported',
     help: 'Energy Imported',
